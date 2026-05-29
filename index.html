@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PV</title>
+</head>
+<body>
+        <!-- 音楽ファイルの読み込み -->
+    <input type="file" id="fileInput" accept=".mp3,.wav">
+
+    <!-- 再生・停止ボタン -->
+    <button id="playButton">再生</button>
+    <button id="stopButton">停止</button>
+
+    <!-- 波形表示 -->
+    <canvas id="waveform" width="390" height="100"></canvas>
+
+    <!-- JSの読み込み（type="module"でimport/exportが使える） -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
