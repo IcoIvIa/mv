@@ -1,8 +1,12 @@
 export class Renderer {
-    constructor(audioManager, canvas) {
+    constructor(audioManager, canvas, sequencerRenderer) {
         this.audioManager = audioManager;
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
+        this.sequencerRenderer = sequencerRenderer;
+        this.isRunning = false;
+        this.lastPage = -1;
+        this.lastStep = -1;
     }
 
     drawWaveform() {
@@ -53,4 +57,39 @@ export class Renderer {
             this.ctx.stroke();
         }
     }
+
+    start() {
+        this.isRunning = true;
+        this.loop();
+    }
+
+    stop() {
+        this.isRunning = false;
+    }
+
+    loop() {
+        if (!this.isRunning) return;
+
+        const currentBeat = this.audioManager.getCurrentBeat();
+        const currentPage = Math.floor(currentBeat / 16);
+        const currentStep = Math.floor(currentBeat) % 16; // ページ内の現在ステップ
+
+    if (currentPage !== this.lastPage) {
+        const pageAmplitudes = this.audioManager.amplitudes.slice(currentPage * 16, (currentPage + 1) * 16); // 保存済みを使う
+        this.sequencerRenderer.drawGrid();
+        this.sequencerRenderer.drawWaveLayer(pageAmplitudes);
+        this.lastPage = currentPage;
+        this.lastStep = -1;
+    }
+
+    if (currentStep !== this.lastStep) {
+        const pageAmplitudes = this.audioManager.amplitudes.slice(currentPage * 16, (currentPage + 1) * 16);
+        this.sequencerRenderer.drawWaveLayer(pageAmplitudes);
+        this.sequencerRenderer.drawCurrentStep(currentStep);
+        this.lastStep = currentStep;
+    }
+
+    requestAnimationFrame(() => this.loop());
 }
+}
+
