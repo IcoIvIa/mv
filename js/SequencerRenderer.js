@@ -22,8 +22,20 @@ export class SequencerRenderer {
     drawDot(col, row, color) {
         const x = col * (this.DOT_SIZE + this.GAP);
         const y = row * (this.DOT_SIZE + this.GAP);
+    // 本体
         this.ctx.fillStyle = color;
-        this.ctx.fillRect(x, y, this.DOT_SIZE, this.DOT_SIZE);
+        this.ctx.beginPath();
+        this.ctx.roundRect(
+            x,
+            y,
+            this.DOT_SIZE,
+            this.DOT_SIZE,
+            6
+        );
+        this.ctx.fill();
+
+        // 角ありの描画（未使用）
+        // this.ctx.fillRect(x, y, this.DOT_SIZE, this.DOT_SIZE);
     }
 
     drawGrid() {
