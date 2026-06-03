@@ -18,24 +18,57 @@ export class SequencerRenderer {
         this.canvas.height = this.ROWS * (this.DOT_SIZE + this.GAP) - this.GAP;
     }
 
-    // ドットを1つ描画する
     drawDot(col, row, color) {
         const x = col * (this.DOT_SIZE + this.GAP);
         const y = row * (this.DOT_SIZE + this.GAP);
-    // 本体
-        this.ctx.fillStyle = color;
-        this.ctx.beginPath();
-        this.ctx.roundRect(
-            x,
-            y,
-            this.DOT_SIZE,
-            this.DOT_SIZE,
-            6
-        );
-        this.ctx.fill();
 
-        // 角ありの描画（未使用）
-        // this.ctx.fillRect(x, y, this.DOT_SIZE, this.DOT_SIZE);
+        // ① 本体
+        // ① ドット打ち（角を除外）
+        this.ctx.fillStyle = color;
+        for (let py = 0; py < this.DOT_SIZE; py += 2) {
+            for (let px = 0; px < this.DOT_SIZE; px += 2) {
+                // 4隅の座標はスキップ
+                const isCorner = (px === 0 && py === 0) ||
+                    (px === 0 && py === this.DOT_SIZE - 2) ||
+                    (px === this.DOT_SIZE - 2 && py === 0) ||
+                    (px === this.DOT_SIZE - 2 && py === this.DOT_SIZE - 2);
+                if (!isCorner) {
+                    this.ctx.fillRect(x + px, y + py, 1, 1);
+                }
+            }
+        }
+
+        // ② 左端・上端（明るい1px、角を避ける）
+        this.ctx.fillStyle = '#aaaaaa';
+        this.ctx.fillRect(x + 1, y, 1, this.DOT_SIZE - 1);  // 左端（上の角を避ける）
+        this.ctx.fillRect(x, y + 1, this.DOT_SIZE - 1, 1);  // 上端（左の角を避ける）
+
+        // ③ 右端・下端（暗い1px、角を避ける）
+        this.ctx.fillStyle = '#555555';
+        this.ctx.fillRect(x + this.DOT_SIZE - 1, y + 1, 1, this.DOT_SIZE - 2);  // 右端
+        this.ctx.fillRect(x + 1, y + this.DOT_SIZE - 1, this.DOT_SIZE - 2, 1);  // 下端
+
+        // ④ 網点
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        for (let py = 3; py < this.DOT_SIZE - 1; py += 3) {
+            for (let px = 3; px < this.DOT_SIZE - 1; px += 3) {
+                this.ctx.fillRect(x + px, y + py, 1, 1);
+            }
+        }
+
+        // ⑤ ハイライト（辺に沿った固定位置）
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+
+        // 上辺（左から4px間隔）
+        this.ctx.fillRect(x + 2, y + 2, 1, 1);
+        this.ctx.fillRect(x + 6, y + 2, 1, 1);
+        this.ctx.fillRect(x + 10, y + 2, 1, 1);
+
+        // 左辺（上から4px間隔、3分の2まで = DOT_SIZE 20px の約13px）
+        this.ctx.fillRect(x + 2, y + 2, 1, 1);  // 上辺と共有
+        this.ctx.fillRect(x + 2, y + 6, 1, 1);
+        this.ctx.fillRect(x + 2, y + 10, 1, 1);
+        this.ctx.fillRect(x + 2, y + 14, 1, 1); // 14px ≒ 3分の2
     }
 
     drawGrid() {
@@ -43,7 +76,7 @@ export class SequencerRenderer {
 
         for (let row = 0; row < this.ROWS; row++) {
             for (let col = 0; col < this.COLS; col++) {
-                this.drawDot(col, row, '#1a1a1a')
+                this.drawDot(col, row, '#888888');
             }
         }
     }
