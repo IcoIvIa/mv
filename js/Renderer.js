@@ -73,18 +73,15 @@ export class Renderer {
         const currentBeat = this.audioManager.getCurrentBeat();
         const currentPage = Math.floor(currentBeat / 16);
         const currentStep = Math.floor(currentBeat) % 16; // ページ内の現在ステップ
-
-    if (currentPage !== this.lastPage) {
         const pageAmplitudes = this.audioManager.amplitudes.slice(currentPage * 16, (currentPage + 1) * 16); // 保存済みを使う
-        this.sequencerRenderer.drawGrid();
+    if (currentPage !== this.lastPage) {
         this.sequencerRenderer.drawWaveLayer(pageAmplitudes);
+        this.sequencerRenderer.drawGrid();
         this.lastPage = currentPage;
         this.lastStep = -1;
-    }
-
-    if (currentStep !== this.lastStep) {
-        const pageAmplitudes = this.audioManager.amplitudes.slice(currentPage * 16, (currentPage + 1) * 16);
+    } else if (currentStep !== this.lastStep) {
         this.sequencerRenderer.drawWaveLayer(pageAmplitudes);
+        this.sequencerRenderer.drawGrid();
         this.sequencerRenderer.drawCurrentStep(currentStep);
         this.lastStep = currentStep;
     }

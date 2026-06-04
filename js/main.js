@@ -17,8 +17,8 @@ document.getElementById('fileInput').addEventListener('change', (e) => {
     audioManager.load(file).then(() => {
         const amplitudes = audioManager.analyzeAmplitudes();
         const pageAmplitudes = amplitudes.slice(0, 16); // 先頭16拍
-        sequencerRenderer.drawGrid();
         sequencerRenderer.drawWaveLayer(pageAmplitudes);
+        sequencerRenderer.drawGrid();
         renderer.drawWaveform();
     });
 

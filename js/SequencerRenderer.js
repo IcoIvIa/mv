@@ -16,67 +16,38 @@ export class SequencerRenderer {
         // Canvasのサイズをドット数から自動計算
         this.canvas.width = this.COLS * (this.DOT_SIZE + this.GAP) - this.GAP;
         this.canvas.height = this.ROWS * (this.DOT_SIZE + this.GAP) - this.GAP;
+
+        // OFFドットのパターンを一度だけ生成
+        this.dotPattern = this._createDotPattern();
     }
 
-    drawDot(col, row, color) {
+    drawDot(col, row, color, usePattern = false) {
         const x = col * (this.DOT_SIZE + this.GAP);
         const y = row * (this.DOT_SIZE + this.GAP);
 
-        // ① 本体
-        // ① ドット打ち（角を除外）
-        this.ctx.fillStyle = color;
-        for (let py = 0; py < this.DOT_SIZE; py += 2) {
-            for (let px = 0; px < this.DOT_SIZE; px += 2) {
-                // 4隅の座標はスキップ
-                const isCorner = (px === 0 && py === 0) ||
-                    (px === 0 && py === this.DOT_SIZE - 2) ||
-                    (px === this.DOT_SIZE - 2 && py === 0) ||
-                    (px === this.DOT_SIZE - 2 && py === this.DOT_SIZE - 2);
-                if (!isCorner) {
-                    this.ctx.fillRect(x + px, y + py, 1, 1);
-                }
-            }
+        if (usePattern) {
+            // OFFドット：パターンを貼り付けるだけ
+            this.ctx.save();
+            this.ctx.fillStyle = this.dotPattern;
+            this.ctx.translate(x, y);
+            this.ctx.fillRect(0, 0, this.DOT_SIZE, this.DOT_SIZE);
+            this.ctx.translate(-x, -y);
+            this.ctx.restore();
+        } else if
+            (!usePattern) {
+            // ONドット・現在ステップ：通常の塗りつぶし
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x, y, this.DOT_SIZE, this.DOT_SIZE);
         }
-
-        // ② 左端・上端（明るい1px、角を避ける）
-        this.ctx.fillStyle = '#aaaaaa';
-        this.ctx.fillRect(x + 1, y, 1, this.DOT_SIZE - 1);  // 左端（上の角を避ける）
-        this.ctx.fillRect(x, y + 1, this.DOT_SIZE - 1, 1);  // 上端（左の角を避ける）
-
-        // ③ 右端・下端（暗い1px、角を避ける）
-        this.ctx.fillStyle = '#555555';
-        this.ctx.fillRect(x + this.DOT_SIZE - 1, y + 1, 1, this.DOT_SIZE - 2);  // 右端
-        this.ctx.fillRect(x + 1, y + this.DOT_SIZE - 1, this.DOT_SIZE - 2, 1);  // 下端
-
-        // ④ 網点
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        for (let py = 3; py < this.DOT_SIZE - 1; py += 3) {
-            for (let px = 3; px < this.DOT_SIZE - 1; px += 3) {
-                this.ctx.fillRect(x + px, y + py, 1, 1);
-            }
-        }
-
-        // ⑤ ハイライト（辺に沿った固定位置）
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-
-        // 上辺（左から4px間隔）
-        this.ctx.fillRect(x + 2, y + 2, 1, 1);
-        this.ctx.fillRect(x + 6, y + 2, 1, 1);
-        this.ctx.fillRect(x + 10, y + 2, 1, 1);
-
-        // 左辺（上から4px間隔、3分の2まで = DOT_SIZE 20px の約13px）
-        this.ctx.fillRect(x + 2, y + 2, 1, 1);  // 上辺と共有
-        this.ctx.fillRect(x + 2, y + 6, 1, 1);
-        this.ctx.fillRect(x + 2, y + 10, 1, 1);
-        this.ctx.fillRect(x + 2, y + 14, 1, 1); // 14px ≒ 3分の2
     }
 
     drawGrid() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // 上からべた塗り（未使用）
+        // this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         for (let row = 0; row < this.ROWS; row++) {
             for (let col = 0; col < this.COLS; col++) {
-                this.drawDot(col, row, '#888888');
+                this.drawDot(col, row, null, true);
             }
         }
     }
@@ -85,7 +56,7 @@ export class SequencerRenderer {
         const CENTER = this.ROWS / 2;
 
         // 最大値で正規化
-        const max = Math.max(...amplitudes);
+        const max = Math.max(...amplitudes) || 1;
 
         for (let col = 0; col < this.COLS; col++) {
             const amp = amplitudes[col] / max;         // 0〜1に正規化
@@ -93,18 +64,72 @@ export class SequencerRenderer {
 
             for (let row = 0; row < this.ROWS; row++) {
                 const distFromCenter = Math.abs(row - CENTER + 0.5);
-                const isWave = distFromCenter <= halfHeight;
-                const color = isWave ? '#ff8c14' : '#1a1a1a';
-                this.drawDot(col, row, color);
+                if (distFromCenter <= halfHeight) {
+                    this.drawDot(col, row, '#ff8c14');
+                }
             }
         }
     }
-
     // 現在ステップの列を強調表示
     drawCurrentStep(stepIndex) {
+        const x = stepIndex * (this.DOT_SIZE + this.GAP);
+
+        this.ctx.strokeStyle = '#ffffff';
+        this.ctx.lineWidth = 1;
+
         for (let row = 0; row < this.ROWS; row++) {
-            this.drawDot(stepIndex, row, '#ffffff');
+            const y = row * (this.DOT_SIZE + this.GAP);
+            this.ctx.strokeRect(x + 0.5, y + 0.5, this.DOT_SIZE - 1, this.DOT_SIZE - 1);
         }
+    }
+
+    _createDotPattern() {
+        const size = this.DOT_SIZE;
+        const off = new OffscreenCanvas(size, size);
+        const ctx = off.getContext('2d');
+
+        // ① ドット打ち（角を除外）
+        ctx.fillStyle = '#888888';
+        for (let py = 0; py < size; py += 2) {
+            for (let px = 0; px < size; px += 2) {
+                const isCorner = (px === 0 && py === 0) ||
+                    (px === 0 && py === size - 2) ||
+                    (px === size - 2 && py === 0) ||
+                    (px === size - 2 && py === size - 2);
+                if (!isCorner) {
+                    ctx.fillRect(px, py, 1, 1);
+                }
+            }
+        }
+
+        // ② 左・上辺
+        ctx.fillStyle = '#aaaaaa';
+        ctx.fillRect(1, 0, 1, size - 1);
+        ctx.fillRect(0, 1, size - 1, 1);
+
+        // ③ 右・下辺
+        ctx.fillStyle = '#555555';
+        ctx.fillRect(size - 1, 1, 1, size - 2);
+        ctx.fillRect(1, size - 1, size - 2, 1);
+
+        // ④ 網点
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        for (let py = 3; py < size - 1; py += 3) {
+            for (let px = 3; px < size - 1; px += 3) {
+                ctx.fillRect(px, py, 1, 1);
+            }
+        }
+
+        // ⑤ ハイライト
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.fillRect(2, 2, 1, 1);
+        ctx.fillRect(6, 2, 1, 1);
+        ctx.fillRect(10, 2, 1, 1);
+        ctx.fillRect(2, 6, 1, 1);
+        ctx.fillRect(2, 10, 1, 1);
+        ctx.fillRect(2, 14, 1, 1);
+
+        return this.ctx.createPattern(off, 'no-repeat');
     }
 
 }
