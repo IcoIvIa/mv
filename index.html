@@ -48,9 +48,9 @@
 
         <div class="sidebar">
             <!-- 音楽ファイルの読み込み -->
-            <input type="file" id="fileInput" accept=".mp3,.wav" >
+            <input type="file" id="fileInput" class="sidebar__file-input" accept=".mp3,.wav" >
             <!-- ステップシーケンサー -->
-            <canvas id="sequencer"></canvas>
+            <canvas id="sequencer" class="sidebar__sequencer"></canvas>
 
             <div class="sidebar__motion-picker" id="motionPicker">
                 <div>floodGrid</div>
@@ -65,7 +65,15 @@
     <script>
         "use strict";
 
-        
+    // 最小化処理
+    function handleToggleClass (idName,className){
+        document.getElementById(`{$idName}`).classList.toggle(`{$className}--collapsed`)
+    };
+
+    handleToggleClass(fileInput,sidebar__file-input);
+    handleToggleClass(sequencer,sidebar__sequencer)
+    handleToggleClass(motionPicker,sidebar__motion-picker)
+
     </script>
 
 
