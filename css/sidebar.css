@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root {
+    --bg: #d8d8d8;
+    --panel: #efefef;
+    --title: #c7c7c7;
+    --border: #444;
+    --text: #222;
+}
+
+.sidebar {
+    position: relative;
+    width: 280px;
+    padding: 8px;
+    flex-direction: column;
+    gap: 8px;
+    font-family: 'Share Tech Mono', monospace;
+    box-sizing: border-box;
+    overflow: hidden;
+    /* 色ムラ */
+    background:
+        linear-gradient(
+            180deg,
+            #dddddd 0%,
+            #d9d9d9 45%,
+            #d5d5d5 100%
+        );
+    border: 2px solid var(--border);
+    /* ほんの少し影 + ハイライト */
+    box-shadow:
+        1px 1px 4px rgba(0,0,0,.10),
+        inset 0 1px rgba(255,255,255,.55),
+        inset 0 -1px rgba(0,0,0,.06);
+}
+
+/* 横縞ノイズ */
+.sidebar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .28;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,.025) 0px,
+            rgba(255,255,255,.025) 1px,
+            transparent 1px,
+            transparent 2px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            rgba(0,0,0,.015) 0px,
+            rgba(0,0,0,.015) 1px,
+            transparent 1px,
+            transparent 2px
+        );
+}
+
+/* ドットノイズ */
+.sidebar::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .04;
+    background-image:
+        radial-gradient(
+            #000 0.5px,
+            transparent 0.5px
+        );
+    background-size: 4px 4px;
+}
+
+.sidebar__file-input,
+.sidebar__sequencer,
+.sidebar__motion-picker {
+    background:
+        linear-gradient(
+            180deg,
+            #f5f5f5,
+            #ececec
+        );
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.7),
+        0 1px 2px rgba(0,0,0,.05);
+}
+
+/* タイトルバー */
+.sidebar__titlebar {
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 8px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--text);
+    user-select: none;
+    background:
+        linear-gradient(
+            180deg,
+            #d2d2d2,
+            #c5c5c5
+        );
+    border-bottom: 1px solid #666;
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.6);
+}
+
+/* 開閉ボタン */
+[data-toggle] {
+    cursor: pointer;
+    font-size: 12px;
+    transition: .15s;
+}
+[data-toggle]:hover {
+    transform: scale(1.1);
+    text-shadow:
+        0 0 2px rgba(0,0,0,.25);
+}
+
+/* Content */
+.sidebar__content {
+    padding: 8px;
+}
+.sidebar__panel {
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* File Input */
+.sidebar input[type=file] {
+    width: 100%;
+    font-size: 11px;
+}
+
+/* Motion */
+.sidebar__motion-picker .sidebar__panel div {
+    padding: 4px 6px;
+    cursor: pointer;
+    transition: .15s;
+}
+.sidebar__motion-picker .sidebar__panel div:hover {
+    background:
+        linear-gradient(
+            180deg,
+            #e4e4e4,
+            #d9d9d9
+        );
+}
+
+/* Sequencer */
+#sequencer {
+    width: 100%;
+    border: 1px solid #777;
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #f4f4f4
+        );
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.8);
+}
+
+/* ===========================
+   Collapse
+=========================== */
+.sidebar__file--collapsed .sidebar__content,
+.sidebar__sequencer--collapsed .sidebar__content,
+.sidebar__motion--collapsed .sidebar__content {
+    display: none;
+}

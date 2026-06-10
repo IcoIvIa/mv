@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>レトロウインドウ</title>
+<style>
+  body {
+    background: #008080;
+    font-family: "MS UI Gothic", sans-serif;
+  }
+
+  .win95-window {
+    width: 350px;
+    border: 2px solid #000;
+    background: #c0c0c0;
+    box-shadow: 3px 3px 0 #000;
+    margin: 40px auto;
+  }
+
+  .titlebar {
+    background: #000080;
+    color: white;
+    padding: 3px 6px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .titlebar .buttons {
+    display: flex;
+    gap: 4px;
+  }
+
+  .titlebar button {
+    width: 16px;
+    height: 14px;
+    border: 2px solid #fff;
+    border-right-color: #404040;
+    border-bottom-color: #404040;
+    background: #c0c0c0;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .content {
+    padding: 12px;
+    font-size: 14px;
+    color: #000;
+  }
+
+  .panel {
+    border: 2px solid #fff;
+    border-right-color: #404040;
+    border-bottom-color: #404040;
+    padding: 8px;
+    background: #dcdcdc;
+  }
+</style>
+</head>
+<body>
+
+<div class="win95-window">
+  <div class="titlebar">
+    <span>レトロウインドウ</span>
+    <div class="buttons">
+      <button></button>
+      <button></button>
+      <button></button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="panel">
+      これは Windows 95 風のウインドウです。<br>
+      HTML と CSS だけで再現しています。
+    </div>
+  </div>

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PV</title>
     <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
 </head>
 
 <body>
@@ -47,36 +48,50 @@
         </div>
 
         <div class="sidebar">
+        <div data-toggle="sidebar__wrapper">▼</div>
             <!-- 音楽ファイルの読み込み -->
-            <input type="file" id="fileInput" class="sidebar__file-input" accept=".mp3,.wav" >
+            <div class="sidebar__file-input"  data-section="file">
+                <div class="sidebar__titlebar flex">
+                    <span>[ インポート ]</span>
+                    <div data-toggle="file">▼</div>
+                </div>
+                <div class="sidebar__content">
+                    <div class="sidebar__panel">
+                        <input type="file" id="fileInput" accept=".mp3,.wav" >
+                    </div>
+                </div>
+            </div>
             <!-- ステップシーケンサー -->
-            <canvas id="sequencer" class="sidebar__sequencer"></canvas>
-
-            <div class="sidebar__motion-picker" id="motionPicker">
-                <div>floodGrid</div>
-                <div>walkGrid</div>
+            <div class="sidebar__sequencer" data-section="sequencer">
+                <div class="sidebar__titlebar flex">
+                    <span>[ シーケンサー ]</span>
+                    <div data-toggle="sequencer">▼</div>
+                </div>
+                <div class="sidebar__content">
+                    <div class="sidebar__panel">
+                        <canvas id="sequencer" ></canvas>
+                    </div>
+                </div>
+            </div>
+            <!-- モーション選択 -->
+            <div class="sidebar__motion-picker" data-section="motion">
+                <div class="sidebar__titlebar flex">
+                    <span>[ モーション ]</span>
+                    <div data-toggle="motion">▼</div>
+                </div>
+                <div class="sidebar__content">
+                    <div class="sidebar__panel">
+                        <div>floodGrid</div>
+                        <div>walkGrid</div>
+                    </div>
+                </div>
             </div>
         </div>
         
     </div>
 
     <!-- JSの読み込み（type="module"でimport/exportが使える） -->
-    <script type="module" src="js/main.js"></script>
-    <script>
-        "use strict";
-
-    // 最小化処理
-    function handleToggleClass (idName,className){
-        document.getElementById(`{$idName}`).classList.toggle(`{$className}--collapsed`)
-    };
-
-    handleToggleClass(fileInput,sidebar__file-input);
-    handleToggleClass(sequencer,sidebar__sequencer)
-    handleToggleClass(motionPicker,sidebar__motion-picker)
-
-    </script>
-
-
+    <script type="module" src="js/main.js" ></script>
 
 </body>
 
