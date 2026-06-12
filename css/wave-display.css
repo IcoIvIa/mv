@@ -1,0 +1,81 @@
+.wave-display {
+    padding: 4px;
+    gap: 8px;
+    background:
+        linear-gradient(
+            180deg,
+            #dddddd 0%,
+            #d9d9d9 45%,
+            #d5d5d5 100%
+        );
+    border: 1px solid var(--border);
+    box-shadow:
+        1px 1px 4px rgba(0,0,0,.10),
+        inset 0 1px rgba(255,255,255,.55),
+        inset 0 -1px rgba(0,0,0,.06);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+/* --- コントロールボタン --- */
+
+.wave-display__controls button {
+    padding: 2px 5px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    color: var(--text);
+    background:
+        linear-gradient(180deg, #e8e8e8, #d0d0d0);
+    border: 1px solid var(--border);
+    box-shadow:
+        inset 0 1px rgba(255,255,255,.6),
+        0 1px 2px rgba(0,0,0,.15);
+    cursor: pointer;
+    user-select: none;
+}
+
+.wave-display__controls button:hover {
+    background:
+        linear-gradient(180deg, #efefef, #dadada);
+}
+
+.wave-display__controls button:active {
+    background:
+        linear-gradient(180deg, #c8c8c8, #d5d5d5);
+    box-shadow:
+        inset 0 1px rgba(0,0,0,.15);
+}
+
+/* --- 液晶ベゼル --- */
+.wave-display__bezel {
+    padding: 4px;
+    background: #4a4a4a;
+    border: 2px solid #111;
+    box-shadow:
+        inset 0 2px 6px rgba(0,0,0,.8),
+        inset 0 0 2px rgba(0,0,0,.5),
+        0 1px rgba(255,255,255,.15);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 画面上部の光反射 */
+.wave-display__bezel::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background: linear-gradient(
+        180deg,
+        rgba(255,255,255,.04) 0%,
+        transparent 100%
+    );
+    pointer-events: none;
+}
+
+/* canvas */
+#waveform {
+    width: 100%;
+}

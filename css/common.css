@@ -12,3 +12,6 @@
     display: flex;
 }
 
+.flex-col {
+    flex-direction: column;
+}

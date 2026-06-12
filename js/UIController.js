@@ -1,10 +1,9 @@
 export class UIController {
-    constructor() {
-        this.windows = [
-            { section: 'file', block: 'sidebar' },
-            { section: 'sequencer', block: 'sidebar' },
-            { section: 'motion', block: 'sidebar' },
-        ]
+    constructor(windows) {
+        if (!windows || windows.length === 0) {
+            throw new Error('UIController: windows is required');
+        }
+        this.windows = windows;
     }
 
     init() {
@@ -36,4 +35,12 @@ export class UIController {
 
         target.classList.toggle(`${item.block}__${section}--collapsed`);
     }
+    
+// SidebarControllerで使用
+    getElement(section) {
+    return document.querySelector(`[data-section="${section}"]`);
+}
+getToggleBtn(section) {
+    return document.querySelector(`[data-toggle="${section}"]`);
+}
 }

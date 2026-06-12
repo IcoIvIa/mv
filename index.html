@@ -7,19 +7,28 @@
     <title>PV</title>
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/wave-display.css">
 </head>
 
 <body>
-    <!-- 再生・停止ボタン -->
-    <button id="playButton">再生</button>
-    <button id="pauseButton">一時停止</button>
-    <button id="stopButton">停止</button>
+    <div class="wave-display flex">
+        <!-- 再生・停止ボタン -->
+        <div class="wave-display__controls flex-col">
+            <div class="wave-display__controls--buttons">
+                <button id="playButton">再生</button>
+                <button id="pauseButton">一時停止</button>
+                <button id="stopButton">停止</button>
+            </div>
+            <div class="wave-display__controls--icon">ここにアイコン</div>
+        </div>
 
-    <!-- 波形表示 -->
-    <canvas id="waveform" width="390" height="100"></canvas>
-
+        <!-- 波形表示 -->
+        <div class="wave-display__bezel">
+            <canvas id="waveform" width="390" height="48"></canvas>
+        </div>
+    </div>
     <div class="layout flex">
-        <!-- ステージ画面（アニメーション表示画面） -->
+        <!-- ステージ画面（アクション表示画面） -->
         <div class="stage__wrapper">
             <div class="stage__row flex">
                 <div data-position="1.1"></div>
@@ -47,20 +56,24 @@
             </div>
         </div>
 
-        <div class="sidebar">
-        <div data-toggle="sidebar__wrapper">▼</div>
+        <div class="sidebar__wrapper" data-section="wrapper">
+            <div class="sidebar__titlebar">
+                <div data-toggle="wrapper">▼</div>
+            </div>
+
             <!-- 音楽ファイルの読み込み -->
-            <div class="sidebar__file-input"  data-section="file">
+            <div class="sidebar__file-input" data-section="file">
                 <div class="sidebar__titlebar flex">
                     <span>[ インポート ]</span>
                     <div data-toggle="file">▼</div>
                 </div>
                 <div class="sidebar__content">
                     <div class="sidebar__panel">
-                        <input type="file" id="fileInput" accept=".mp3,.wav" >
+                        <input type="file" id="fileInput" accept=".mp3,.wav">
                     </div>
                 </div>
             </div>
+
             <!-- ステップシーケンサー -->
             <div class="sidebar__sequencer" data-section="sequencer">
                 <div class="sidebar__titlebar flex">
@@ -69,10 +82,11 @@
                 </div>
                 <div class="sidebar__content">
                     <div class="sidebar__panel">
-                        <canvas id="sequencer" ></canvas>
+                        <canvas id="sequencer"></canvas>
                     </div>
                 </div>
             </div>
+
             <!-- モーション選択 -->
             <div class="sidebar__motion-picker" data-section="motion">
                 <div class="sidebar__titlebar flex">
@@ -86,12 +100,13 @@
                     </div>
                 </div>
             </div>
+
         </div>
-        
+
     </div>
 
     <!-- JSの読み込み（type="module"でimport/exportが使える） -->
-    <script type="module" src="js/main.js" ></script>
+    <script type="module" src="js/main.js"></script>
 
 </body>
 
